@@ -7,7 +7,7 @@ func _ready() -> void:
 	position = target.position
 
 
-func _process(delta) -> void:
+func _process(delta: float) -> void:
 	if !current:
 		return
 	
