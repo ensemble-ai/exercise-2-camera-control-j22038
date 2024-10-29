@@ -2,10 +2,10 @@ class_name LerpTarget
 extends CameraControllerBase
 
 @export var lead_speed:float = target.BASE_SPEED * 0.03
-@export var catchup_delay_duration:float = 1.0
+@export var catchup_delay_duration:float = 0.5
 @export var catchup_speed:float = target.BASE_SPEED * 0.02
 @export var leash_distance:float = 10.0
-
+var _timer:Timer
 
 func _ready() -> void:
 	super()
@@ -42,39 +42,49 @@ func _process(delta: float) -> void:
 		if abs(z_distance) > leash_distance:
 			target.global_position.z -= catchup_speed * 5
 		global_position.z -= lead_speed
-	
-	if x_distance > 0 and not vessel_is_moving:
-		if catchup_speed > abs(x_distance):
-			target.global_position.x += x_distance
-		if abs(x_distance) > leash_distance:
-			target.global_position.x += catchup_speed * 5
-		else:
-			target.global_position.x += catchup_speed
-	
-	if x_distance < 0 and not vessel_is_moving:
-		if catchup_speed > abs(x_distance):
-			target.global_position.x -= x_distance
-		if abs(x_distance) > leash_distance:
-			target.global_position.x -= catchup_speed * 5
-		else:
-			target.global_position.x -= catchup_speed
 		
-	if z_distance > 0 and not vessel_is_moving:
-		if catchup_speed > abs(z_distance):
-			target.global_position.z += z_distance
-		if abs(z_distance) > leash_distance:
-			target.global_position.z += catchup_speed * 5
-		else:
-			target.global_position.z += catchup_speed
+	if not vessel_is_moving and _timer == null:
+		_timer = Timer.new()
+		add_child(_timer)
+		_timer.one_shot = true
+		_timer.start(catchup_delay_duration)
+		
+	if _timer != null and _timer.is_stopped():
+		if x_distance > 0 and not vessel_is_moving:
+			if catchup_speed > abs(x_distance):
+				target.global_position.x += x_distance
+			if abs(x_distance) > leash_distance:
+				target.global_position.x += catchup_speed * 5
+			else:
+				target.global_position.x += catchup_speed
+		
+		if x_distance < 0 and not vessel_is_moving:
+			if catchup_speed > abs(x_distance):
+				target.global_position.x -= x_distance
+			if abs(x_distance) > leash_distance:
+				target.global_position.x -= catchup_speed * 5
+			else:
+				target.global_position.x -= catchup_speed
+			
+		if z_distance > 0 and not vessel_is_moving:
+			if catchup_speed > abs(z_distance):
+				target.global_position.z += z_distance
+			if abs(z_distance) > leash_distance:
+				target.global_position.z += catchup_speed * 5
+			else:
+				target.global_position.z += catchup_speed
+		
+		if z_distance < 0 and not vessel_is_moving:
+			if catchup_speed > abs(z_distance):
+				target.global_position.z -= z_distance
+			if abs(z_distance) > leash_distance:
+				target.global_position.z -= catchup_speed * 5
+			else:
+				target.global_position.z -= catchup_speed
 	
-	if z_distance < 0 and not vessel_is_moving:
-		if catchup_speed > abs(z_distance):
-			target.global_position.z -= z_distance
-		if abs(z_distance) > leash_distance:
-			target.global_position.z -= catchup_speed * 5
-		else:
-			target.global_position.z -= catchup_speed
-					
+	if x_distance == 0 and z_distance == 0 and _timer != null:
+		_timer.queue_free()
+
 	super(delta)
 
 
