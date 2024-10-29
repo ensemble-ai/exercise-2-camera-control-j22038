@@ -35,6 +35,7 @@ func _process(delta: float) -> void:
 	if target.global_position.z < top_edge_pos:
 		target.global_position.z = top_edge_pos
 	
+	target.global_position += autoscroll_speed
 	global_position += autoscroll_speed
 	super(delta)
 
