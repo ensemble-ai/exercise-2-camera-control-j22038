@@ -1,7 +1,8 @@
-class_name Lerp
+class_name LerpTarget
 extends CameraControllerBase
 
-@export var follow_speed:float = target.BASE_SPEED * 0.01
+@export var lead_speed:float = target.BASE_SPEED * 0.03
+@export var catchup_delay_duration:float = 1.0
 @export var catchup_speed:float = target.BASE_SPEED * 0.02
 @export var leash_distance:float = 10.0
 
@@ -18,77 +19,62 @@ func _process(delta: float) -> void:
 	if draw_camera_logic:
 		draw_logic()
 	
-	var x_distance:float = target.global_position.x - global_position.x
-	var z_distance:float = target.global_position.z - global_position.z
+	var x_distance:float = global_position.x - target.global_position.x
+	var z_distance:float = global_position.z - target.global_position.z
 	var vessel_is_moving:bool = abs(target.velocity.x) > 0 or abs(target.velocity.z) > 0
 	
-	# if the distance between vessel and camera is greater than leash 
-	# then follow speed and catchup speed are mulitiplied by 5
-
-	if x_distance > 0 and vessel_is_moving:
-		if follow_speed > abs(x_distance):
-			global_position.x += x_distance
+	if target.velocity.x > 0:
 		if abs(x_distance) > leash_distance:
-			global_position.x += follow_speed * 5
-		else:
-			global_position.x += follow_speed
+			target.global_position.x += catchup_speed * 5
+		global_position.x += lead_speed
 		
-	if x_distance < 0 and vessel_is_moving:
-		if follow_speed > abs(x_distance):
-			global_position.x -= x_distance
+	if target.velocity.x < 0:
 		if abs(x_distance) > leash_distance:
-			global_position.x -= follow_speed * 5
-		else:
-			global_position.x -= follow_speed
-		
-	if z_distance > 0 and vessel_is_moving:
-		if follow_speed > abs(z_distance):
-			global_position.z += z_distance
+			target.global_position.x -= catchup_speed * 5
+		global_position.x -= lead_speed
+	
+	if target.velocity.z > 0:
 		if abs(z_distance) > leash_distance:
-			global_position.z += follow_speed * 5
-		else:
-			global_position.z += follow_speed
+			target.global_position.z += catchup_speed * 5
+		global_position.z += lead_speed
 		
-	if z_distance < 0 and vessel_is_moving:
-		if follow_speed > abs(z_distance):
-			global_position.z -= z_distance
+	if target.velocity.z < 0:
 		if abs(z_distance) > leash_distance:
-			global_position.z -= follow_speed * 5
-		else:
-			global_position.z -= follow_speed
-
+			target.global_position.z -= catchup_speed * 5
+		global_position.z -= lead_speed
+	
 	if x_distance > 0 and not vessel_is_moving:
 		if catchup_speed > abs(x_distance):
-			global_position.x += x_distance
+			target.global_position.x += x_distance
 		if abs(x_distance) > leash_distance:
-			global_position.x += catchup_speed * 5
+			target.global_position.x += catchup_speed * 5
 		else:
-			global_position.x += catchup_speed
+			target.global_position.x += catchup_speed
 	
 	if x_distance < 0 and not vessel_is_moving:
 		if catchup_speed > abs(x_distance):
-			global_position.x -= x_distance
+			target.global_position.x -= x_distance
 		if abs(x_distance) > leash_distance:
-			global_position.x -= catchup_speed * 5
+			target.global_position.x -= catchup_speed * 5
 		else:
-			global_position.x -= catchup_speed
+			target.global_position.x -= catchup_speed
 		
 	if z_distance > 0 and not vessel_is_moving:
 		if catchup_speed > abs(z_distance):
-			global_position.z += z_distance
+			target.global_position.z += z_distance
 		if abs(z_distance) > leash_distance:
-			global_position.z += catchup_speed * 5
+			target.global_position.z += catchup_speed * 5
 		else:
-			global_position.z += catchup_speed
+			target.global_position.z += catchup_speed
 	
 	if z_distance < 0 and not vessel_is_moving:
 		if catchup_speed > abs(z_distance):
-			global_position.z -= z_distance
+			target.global_position.z -= z_distance
 		if abs(z_distance) > leash_distance:
-			global_position.z -= catchup_speed * 5
+			target.global_position.z -= catchup_speed * 5
 		else:
-			global_position.z -= catchup_speed
-	
+			target.global_position.z -= catchup_speed
+					
 	super(delta)
 
 
