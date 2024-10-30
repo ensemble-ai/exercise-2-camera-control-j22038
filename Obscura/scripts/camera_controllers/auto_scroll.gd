@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 	if !current:
 		return
 	
-	if draw_camera_logic:
+	if !draw_camera_logic:
 		draw_logic()
 		
 	var left_edge_pos:float = global_position.x + top_left.y

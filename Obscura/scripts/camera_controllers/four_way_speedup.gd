@@ -2,8 +2,8 @@ class_name FourWaySpeedup
 extends CameraControllerBase
 
 @export var push_ratio:float = 0.015
-@export var pushbox_top_left:Vector2 = Vector2(-8.0, -8.0)
-@export var pushbox_bottom_right:Vector2 = Vector2(8.0, 8.0)
+@export var pushbox_top_left:Vector2 = Vector2(-6.0, -6.0)
+@export var pushbox_bottom_right:Vector2 = Vector2(6.0, 6.0)
 @export var speedup_zone_top_left:Vector2 = Vector2(-4.0, -4.0)
 @export var speedup_zone_bottom_right:Vector2 = Vector2(4.0, 4.0)
 
@@ -17,7 +17,7 @@ func _process(delta: float) -> void:
 	if !current:
 		return
 	
-	if draw_camera_logic:
+	if !draw_camera_logic:
 		draw_logic()
 
 	var inner_left_edge_pos:float = global_position.x + speedup_zone_top_left.y
@@ -59,8 +59,8 @@ func _process(delta: float) -> void:
 	
 	var tpos = target.global_position
 	var cpos = global_position
-	var box_width = abs(pushbox_top_left.y) * 2
-	var box_height = abs(pushbox_top_left.x) * 2
+	var box_width = abs(pushbox_top_left.y) * 2.0
+	var box_height = abs(pushbox_top_left.x) * 2.0
 
 	var diff_between_left_edges = (tpos.x - target.WIDTH / 2.0) - (cpos.x - box_width / 2.0)
 	if diff_between_left_edges < 0:

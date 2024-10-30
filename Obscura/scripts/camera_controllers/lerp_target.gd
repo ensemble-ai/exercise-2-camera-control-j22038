@@ -16,7 +16,7 @@ func _process(delta: float) -> void:
 	if !current:
 		return
 	
-	if draw_camera_logic:
+	if !draw_camera_logic:
 		draw_logic()
 	
 	var x_distance:float = global_position.x - target.global_position.x
