@@ -48,23 +48,18 @@ func draw_logic() -> void:
 	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	
-	var left:float = top_left.y
-	var right:float = bottom_right.y
-	var top:float = top_left.x
-	var bottom:float = bottom_right.x
-	
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
-	immediate_mesh.surface_add_vertex(Vector3(right, 0, top))
-	immediate_mesh.surface_add_vertex(Vector3(right, 0, bottom))
+	immediate_mesh.surface_add_vertex(Vector3(bottom_right.y, 0, top_left.x))
+	immediate_mesh.surface_add_vertex(Vector3(bottom_right.y, 0, bottom_right.x))
 	
-	immediate_mesh.surface_add_vertex(Vector3(right, 0, bottom))
-	immediate_mesh.surface_add_vertex(Vector3(left, 0, bottom))
+	immediate_mesh.surface_add_vertex(Vector3(bottom_right.y, 0, bottom_right.x))
+	immediate_mesh.surface_add_vertex(Vector3(top_left.y, 0, bottom_right.x))
 	
-	immediate_mesh.surface_add_vertex(Vector3(left, 0, bottom))
-	immediate_mesh.surface_add_vertex(Vector3(left, 0, top))
+	immediate_mesh.surface_add_vertex(Vector3(top_left.y, 0, bottom_right.x))
+	immediate_mesh.surface_add_vertex(Vector3(top_left.y, 0, top_left.x))
 	
-	immediate_mesh.surface_add_vertex(Vector3(left, 0, top))
-	immediate_mesh.surface_add_vertex(Vector3(right, 0, top))
+	immediate_mesh.surface_add_vertex(Vector3(top_left.y, 0, top_left.x))
+	immediate_mesh.surface_add_vertex(Vector3(bottom_right.y, 0, top_left.x))
 	immediate_mesh.surface_end()
 
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED

@@ -1,6 +1,10 @@
 class_name PositionLock
 extends CameraControllerBase
 
+const left:float = -5.0
+const right:float = 5.0
+const top:float = -5.0
+const bottom:float = 5.0
 
 func _ready() -> void:
 	super()
@@ -26,11 +30,6 @@ func draw_logic() -> void:
 	
 	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	
-	var left:float = -5.0
-	var right:float = 5.0
-	var top:float = -5.0
-	var bottom:float = 5.0
 	
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
 	immediate_mesh.surface_add_vertex(Vector3(left, 0, 0))

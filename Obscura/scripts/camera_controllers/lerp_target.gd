@@ -1,6 +1,10 @@
 class_name LerpTarget
 extends CameraControllerBase
 
+const left:float = -5.0
+const right:float = 5.0
+const top:float = -5.0
+const bottom:float = 5.0
 @export var lead_speed:float = target.BASE_SPEED * 0.03
 @export var catchup_delay_duration:float = 0.5
 @export var catchup_speed:float = target.BASE_SPEED * 0.02
@@ -18,6 +22,11 @@ func _process(delta: float) -> void:
 	
 	if !draw_camera_logic:
 		draw_logic()
+
+	var left_edge_pos:float = global_position.x - leash_distance
+	var right_edge_pos:float = global_position.x + leash_distance
+	var top_edge_pos:float = global_position.z - leash_distance
+	var bottom_edge_pos:float = global_position.z + leash_distance
 	
 	var x_distance:float = global_position.x - target.global_position.x
 	var z_distance:float = global_position.z - target.global_position.z
@@ -25,22 +34,22 @@ func _process(delta: float) -> void:
 	
 	if target.velocity.x > 0:
 		if abs(x_distance) > leash_distance:
-			target.global_position.x += catchup_speed * 5
+			target.global_position.x = left_edge_pos
 		global_position.x += lead_speed
 		
 	if target.velocity.x < 0:
 		if abs(x_distance) > leash_distance:
-			target.global_position.x -= catchup_speed * 5
+			target.global_position.x = right_edge_pos
 		global_position.x -= lead_speed
 	
 	if target.velocity.z > 0:
 		if abs(z_distance) > leash_distance:
-			target.global_position.z += catchup_speed * 5
+			target.global_position.z = top_edge_pos
 		global_position.z += lead_speed
 		
 	if target.velocity.z < 0:
 		if abs(z_distance) > leash_distance:
-			target.global_position.z -= catchup_speed * 5
+			target.global_position.z = bottom_edge_pos
 		global_position.z -= lead_speed
 		
 	if not vessel_is_moving and _timer == null:
@@ -54,34 +63,30 @@ func _process(delta: float) -> void:
 			if catchup_speed > abs(x_distance):
 				target.global_position.x += x_distance
 			if abs(x_distance) > leash_distance:
-				target.global_position.x += catchup_speed * 5
-			else:
-				target.global_position.x += catchup_speed
+				target.global_position.x = left_edge_pos
+			target.global_position.x += catchup_speed
 		
 		if x_distance < 0 and not vessel_is_moving:
 			if catchup_speed > abs(x_distance):
 				target.global_position.x -= x_distance
 			if abs(x_distance) > leash_distance:
-				target.global_position.x -= catchup_speed * 5
-			else:
-				target.global_position.x -= catchup_speed
+				target.global_position.x = right_edge_pos
+			target.global_position.x -= catchup_speed
 			
 		if z_distance > 0 and not vessel_is_moving:
 			if catchup_speed > abs(z_distance):
 				target.global_position.z += z_distance
 			if abs(z_distance) > leash_distance:
-				target.global_position.z += catchup_speed * 5
-			else:
-				target.global_position.z += catchup_speed
+				target.global_position.z = top_edge_pos
+			target.global_position.z += catchup_speed
 		
 		if z_distance < 0 and not vessel_is_moving:
 			if catchup_speed > abs(z_distance):
 				target.global_position.z -= z_distance
 			if abs(z_distance) > leash_distance:
-				target.global_position.z -= catchup_speed * 5
-			else:
-				target.global_position.z -= catchup_speed
-	
+				target.global_position.z = bottom_edge_pos
+			target.global_position.z -= catchup_speed
+				
 	if x_distance == 0 and z_distance == 0 and _timer != null:
 		_timer.queue_free()
 
@@ -95,11 +100,6 @@ func draw_logic() -> void:
 	
 	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	
-	var left:float = -5.0
-	var right:float = 5.0
-	var top:float = -5.0
-	var bottom:float = 5.0
 	
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
 	immediate_mesh.surface_add_vertex(Vector3(left, 0, 0))
